@@ -1,0 +1,19 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #fff;
+}
+.main-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  max-width: 428px;
+  height: 100vh;
+  background-color: gray;
+  /* background-color: #fffbff; */
+}
