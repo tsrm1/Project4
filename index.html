@@ -17,25 +17,57 @@
   </head>
   <body>
     <div class="main-container">
-      <p class="current-weekday">Среда</p>
-      <p class="current-date">3 января</p>
-      <div id="searchForm">
-        <input type="text" placeholder="Поиск" class="search-input" />
+      <p class="current-weekday">Wednesday</p>
+      <p class="current-date">January 3</p>
+      <div id="searchBar">
+        <input type="text" placeholder="Search" class="search-input" />
         <span class="material-symbols-outlined search-btn"> search </span>
       </div>
-      <div class="filters">
-        <p class="filter-all active">
+      <div id="filters">
+        <!-- <p class="filter-btn filter-all current">
           <span class="material-symbols-outlined"> check </span>
-          Все
+          All
         </p>
-        <p class="filter-active">Активные</p>
-        <p class="filter-finished">Завершённые</p>
+        <p class="filter-btn filter-active">Active</p>
+        <p class="filter-btn filter-finished">Completed</p> -->
+        <button class="filter-btn filter-all current">
+          <span class="material-symbols-outlined"> check </span>
+          All
+        </button>
+        <button class="filter-btn filter-active">Active</button>
+        <button class="filter-btn filter-finished">Completed</button>
+      </div>
+      <ul id="tasks">
+        <li>
+          <input type="checkbox" checked id="0.122233" />
+          <label for="0.122233">
+            <p class="task-date">10 января, 11:30</p>
+            <p class="task-todo deleted-text">Покормить кошку</p>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="0.1442233" />
+          <label for="0.1442233">
+            <p class="task-date">10 января, 11:30</p>
+            <p class="task-todo">Покормить кошку</p>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="0.1442233" />
+          <label for="0.1442233">
+            <p class="task-date">10 января, 11:30</p>
+            <p class="task-todo">Покормить кошку</p>
+          </label>
+        </li>
+      </ul>
+      <div class="addNew">
+        <span class="material-symbols-outlined"> edit </span>
       </div>
     </div>
-    <span class="material-symbols-outlined"> close </span>
+    <!-- <span class="material-symbols-outlined"> close </span>
     <span class="material-symbols-outlined"> edit </span>
     <span class="material-symbols-outlined"> edit_calendar </span>
-    <span class="material-symbols-outlined"> edit_document </span>
+    <span class="material-symbols-outlined"> edit_document </span> -->
   </body>
   <script src="/scripts/script.js"></script>
 </html>
