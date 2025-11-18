@@ -60,9 +60,27 @@
           </label>
         </li>
       </ul>
-      <div class="addNew">
+      <div class="addNewTask">
         <span class="material-symbols-outlined"> edit </span>
       </div>
+
+      <form id="addNewTaskForm">
+        <div class="horisontal-line">---</div>
+        <input type="text" placeholder="Description" name="task-description" />
+        <input type="datetime-local" placeholder="Date" name="task-date" />
+        <div class="remindMeBlock">
+          <span class="remindMeBlock-text">Remind me </span>
+          <!-- <span class="remindMeBlock-checker material-symbols-outlined">
+            toggle_on
+          </span> -->
+          <img src="/img/Switch.svg" alt="" />
+        </div>
+        <div class="devider"></div>
+        <div class="btn-block">
+          <input type="submit" value="Add" id="addNewTaskFormSubmitBtn" />
+          <input type="button" value="Cancel" id="addNewTaskFormCancelBtn" />
+        </div>
+      </form>
     </div>
     <!-- <span class="material-symbols-outlined"> close </span>
     <span class="material-symbols-outlined"> edit </span>
