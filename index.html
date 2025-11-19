@@ -35,36 +35,14 @@
           All
         </button>
         <button class="filter-btn filter-active">Active</button>
-        <button class="filter-btn filter-finished">Completed</button>
+        <button class="filter-btn filter-completed">Completed</button>
       </div>
-      <ul id="tasks">
-        <li>
-          <input type="checkbox" checked id="0.122233" />
-          <label for="0.122233">
-            <p class="task-date">10 января, 11:30</p>
-            <p class="task-todo deleted-text">Покормить кошку</p>
-          </label>
-        </li>
-        <li>
-          <input type="checkbox" id="0.1442233" />
-          <label for="0.1442233">
-            <p class="task-date">10 января, 11:30</p>
-            <p class="task-todo">Покормить кошку</p>
-          </label>
-        </li>
-        <li>
-          <input type="checkbox" id="0.1442233" />
-          <label for="0.1442233">
-            <p class="task-date">10 января, 11:30</p>
-            <p class="task-todo">Покормить кошку</p>
-          </label>
-        </li>
-      </ul>
+      <ul id="tasks"></ul>
       <div class="addNewTask">
         <span class="material-symbols-outlined"> edit </span>
       </div>
 
-      <form id="addNewTaskForm">
+      <form id="addNewTaskForm" class="hidden">
         <div class="horisontal-line">---</div>
         <input type="text" placeholder="Description" name="task-description" />
         <input type="datetime-local" placeholder="Date" name="task-date" />
