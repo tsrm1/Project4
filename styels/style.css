@@ -22,6 +22,8 @@ body {
 
   width: 428px;
   height: 100vh;
+  /* max-height: 100vh; */
+  overflow: hidden; /* важно! */
   background-color: #fffbff;
   padding: 24px 16px 16px 16px;
   border-radius: 8px;
@@ -85,7 +87,9 @@ body {
   border: 1px solid gray;
   background-color: #fffbff;
 }
-.filter-btn:hover,
+.filter-btn:hover {
+  background-color: #e4d4ff;
+}
 #tasks > li:hover {
   background-color: #e6e2e9;
   border: 2px solid gray;
@@ -93,6 +97,10 @@ body {
 }
 .current {
   background-color: #e8def8;
+}
+
+.hidden {
+  display: none;
 }
 .filter-all {
   border-top-left-radius: 24px;
@@ -102,7 +110,7 @@ body {
   border: 1px solid gray;
   border-style: solid none;
 }
-.filter-completed {
+.filter-done {
   border-top-right-radius: 24px;
   border-bottom-right-radius: 24px;
 }
@@ -111,16 +119,23 @@ body {
   font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
 } */
 #tasks {
-  margin-top: 4px;
+  margin-top: 4px 0 80px;
+  overflow-y: auto;
+  /*Чтобы задать строго ограниченный по высоте блок, который можно прокручивать.*/
+  height: calc(100vh - 290px);
 }
 #tasks > li {
   list-style: none;
   display: flex;
+  justify-content: space-between;
   width: 100%;
   height: 62px;
   background-color: #f7f2fa;
   margin-top: 12px;
   border-radius: 16px;
+
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+  transition: 0.2s ease;
 }
 
 #tasks > li > input {
@@ -144,15 +159,28 @@ body {
 .task-todo {
   font-size: 16px;
   color: #a5a1a8;
+  width: 270px;
 }
 
 .deleted-text {
   text-decoration: line-through;
 }
 
+.taskEditBtnContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 62px;
+  border-radius: 15px;
+  cursor: pointer;
+  background: #efe5ff;
+  transition: 0.2s;
+}
+.taskEditBtnContainer:hover {
+  background-color: #e4d4ff;
+}
 .addNewTask {
   position: absolute;
-  /* text-align: center; */
   padding: 16px;
   bottom: 16px;
   right: 16px;
@@ -161,8 +189,33 @@ body {
   background-color: #ebdef7;
   border-radius: 16px;
 }
+.addNewTask:hover {
+  cursor: pointer;
+  background-color: #e4d4ff;
+  border: 1px solid gray;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+  transition: 0.2s ease;
+}
 
-#addNewTaskForm {
+/* ********************************************************************* */
+/* Модальное окно */
+
+.addNewTaskBlock {
+  display: none; /* изначально скрыта */
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.33);
+  /* opacity: 0.33; */
+  width: 428px;
+  height: 100%;
+}
+
+.addNewTaskBlock.active {
+  display: block;
+}
+
+.addNewTaskForm {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -177,31 +230,28 @@ body {
   gap: 16px;
 }
 
-/* #addNewTaskForm .hidden {
-  display: none;
-} */
-#addNewTaskForm > input {
+.addNewTaskForm > input {
   color: #49454f;
   font-size: 16px;
 }
-#addNewTaskForm > input:hover {
+.addNewTaskForm > input:hover {
   background-color: #e6e2e9;
   border: 2px solid gray;
   cursor: pointer;
 }
 
-#addNewTaskForm > .horisontal-line {
+.addNewTaskForm > .horisontal-line {
   height: 36px;
   margin: 0 auto;
 }
-#addNewTaskForm > input {
+.addNewTaskForm > input {
   height: 56px;
   padding: 4px 16px;
   border: 1px solid #79747e;
   border-radius: 4px;
 }
 
-#addNewTaskForm > .remindMeBlock {
+.addNewTaskForm > .remindMeBlock {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -211,8 +261,6 @@ body {
   font-size: 16px;
   padding: 0 8px;
 }
-/* .remindMeBlock-checker {
-} */
 
 .devider {
   height: 12px;
@@ -220,7 +268,7 @@ body {
 
 .btn-block {
   display: flex;
-  justify-content: end;
+  justify-content: space-between;
   gap: 8px;
 }
 

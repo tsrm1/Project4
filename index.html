@@ -17,8 +17,8 @@
   </head>
   <body>
     <div class="main-container">
-      <p class="current-weekday">Wednesday</p>
-      <p class="current-date">January 3</p>
+      <p class="current-weekday"></p>
+      <p class="current-date"></p>
       <div id="searchBar">
         <input type="text" placeholder="Search" class="search-input" />
         <span class="material-symbols-outlined search-btn"> search </span>
@@ -30,39 +30,70 @@
         </p>
         <p class="filter-btn filter-active">Active</p>
         <p class="filter-btn filter-finished">Completed</p> -->
-        <button class="filter-btn filter-all current">
-          <span class="material-symbols-outlined"> check </span>
+        <button class="filter-btn filter-all">
+          <span class="material-symbols-outlined filter-all-check hidden">
+            check
+          </span>
           All
         </button>
-        <button class="filter-btn filter-active">Active</button>
-        <button class="filter-btn filter-completed">Completed</button>
+        <button class="filter-btn filter-active current">
+          <span class="material-symbols-outlined filter-active-check">
+            check
+          </span>
+          Active
+        </button>
+        <button class="filter-btn filter-done">
+          <span class="material-symbols-outlined filter-done-check hidden">
+            check
+          </span>
+          Done
+        </button>
       </div>
+      <!-- ************* -->
       <ul id="tasks"></ul>
+      <!-- ************* -->
       <div class="addNewTask">
-        <span class="material-symbols-outlined"> edit </span>
+        <!-- <span class="material-symbols-outlined"> edit </span> -->
+        <span class="material-symbols-outlined"> add </span>
       </div>
-
-      <form id="addNewTaskForm" class="hidden">
-        <div class="horisontal-line">---</div>
-        <input type="text" placeholder="Description" name="task-description" />
-        <input type="datetime-local" placeholder="Date" name="task-date" />
-        <div class="remindMeBlock">
-          <span class="remindMeBlock-text">Remind me </span>
-          <!-- <span class="remindMeBlock-checker material-symbols-outlined">
+      <div class="addNewTaskBlock">
+        <form class="addNewTaskForm" id="">
+          <div class="horisontal-line">
+            <span class="material-symbols-outlined"> drag_indicator </span>
+          </div>
+          <input
+            type="text"
+            placeholder="Description"
+            name="task-description"
+            id="addNewTaskFormDescriptionInput"
+          />
+          <input
+            type="datetime-local"
+            placeholder="Date"
+            name="task-date"
+            id="addNewTaskFormDateInput"
+          />
+          <div class="remindMeBlock">
+            <span class="remindMeBlock-text">Remind me </span>
+            <!-- <span class="remindMeBlock-checker material-symbols-outlined">
             toggle_on
           </span> -->
-          <img src="/img/Switch.svg" alt="" />
-        </div>
-        <div class="devider"></div>
-        <div class="btn-block">
-          <input type="submit" value="Add" id="addNewTaskFormSubmitBtn" />
-          <input type="button" value="Cancel" id="addNewTaskFormCancelBtn" />
-        </div>
-      </form>
+            <img src="/img/Switch.svg" alt="" />
+          </div>
+          <div class="devider"></div>
+          <div class="btn-block">
+            <input type="button" value="Delete" id="addNewTaskFormDeleteBtn" />
+            <input type="button" value="Cancel" id="addNewTaskFormCancelBtn" />
+            <input type="submit" value="Save" id="addNewTaskFormSubmitBtn" />
+          </div>
+        </form>
+      </div>
     </div>
     <!-- <span class="material-symbols-outlined"> close </span>
     <span class="material-symbols-outlined"> edit </span>
     <span class="material-symbols-outlined"> edit_calendar </span>
+    <span class="material-symbols-outlined"> close </span>
+    <span class="material-symbols-outlined"> delete </span>
     <span class="material-symbols-outlined"> edit_document </span> -->
   </body>
   <script src="/scripts/script.js"></script>

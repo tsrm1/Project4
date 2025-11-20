@@ -7,85 +7,22 @@
 // доп. функ: поиск, редактирование задачи(название, время)
 
 // task(entity):{
-//     id:String|Number, // Math.random() | Sate.now()
+//     id:String|Number, // Math.random() | Date.now()
 //     title: String,
 //     date: String | Number,
 //     completed: Boolean //false->true
 // }
 
-// const tasksR = [
-//   {
-//     id: 0.111111,
-//     title: "Learn React",
-//     date: "12.12.2025",
-//     completed: false,
-//   },
-//   {
-//     id: 0.222222,
-//     title: "Покормить кошку",
-//     date: "11 января, 12:30",
-//     completed: true,
-//   },
-//   {
-//     id: 0.333333,
-//     title: "Покормить собаку",
-//     date: "12 января, 13:30",
-//     completed: false,
-//   },
-//   {
-//     id: 0.444444,
-//     title: "Покормить касатку",
-//     date: "13 января, 14:30",
-//     completed: false,
-//   },
-// ];
-
 const tasks = JSON.parse(localStorage.getItem("myToDo")) || [];
-// const tasks = JSON.parse(localStorage.getItem("myToDo")) || tasksR;
 window.addEventListener("DOMContentLoaded", () => {
-  tasks.length !== 0 && renderAllTasks(tasks);
+  tasks.length !== 0 && showTasks("active");
 });
 
-// const currentWeekDay = document.querySelector(".current-weekday").textContent;
-// console.log(currentWeekDay);
-// const currentDate = document.querySelector(".current-date").textContent;
-// console.log(currentDate);
-// const searchInput = document.querySelector(".search-input").value;
-// console.log(searchInput);
-
-// const filterBtnAll = document.querySelector(".filter-all");
-// console.log(filterBtnAll);
-
-// const filterBtnActive = document.querySelector(".filter-active");
-// console.log(filterBtnActive);
-
-// const filterBtnCompleted = document.querySelector(".filter-completed");
-// console.log(filterBtnCompleted);
-
-// const listOfTasks2 = document.querySelectorAll("#tasks>li");
-// console.log(listOfTasks2);
-
-// function getTaskInfo(task) {
-//   const taskCompleted = task.querySelector('input[type="checkbox"]').checked;
-//   const taskId = task.querySelector('input[type="checkbox"]').id;
-//   const taskDateTime = task.querySelector(".task-date").textContent;
-//   const taskToDo = task.querySelector(".task-todo").textContent;
-//   console.log(`taskCompleted [${taskCompleted}]`);
-//   console.log(`taskDateTime [${taskDateTime}]`);
-//   console.log(`taskToDo [${taskToDo}]`);
-//   console.log(`Task id [${taskId}]`);
+// function remove(evt) {
+//   // evt.target будет указывать на элемент <li>, по которому был произведён клик
+//   // evt.currentTarget будет указывать на родительский элемент <ul>
+//   evt.target.remove();
 // }
-
-// for (let i = 0; i < listOfTasks2.length; i++) {
-//   console.log(listOfTasks2[i]);
-//   getTaskInfo(listOfTasks2[i]);
-// }
-
-function remove(evt) {
-  // evt.target будет указывать на элемент <li>, по которому был произведён клик
-  // evt.currentTarget будет указывать на родительский элемент <ul>
-  evt.target.remove();
-}
 
 // *******************************************************
 // const months = [
@@ -148,6 +85,25 @@ currentDate.textContent = `${now.getDate()} ${
   months[now.getMonth()]
 } ${now.getFullYear()}`;
 
+function utcToInput(utcString) {
+  const date = new Date(utcString);
+
+  if (isNaN(date.getTime())) {
+    console.error("Invalid UTC date:", utcString);
+    return "";
+  }
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+
+  // Формат строго: YYYY-MM-DDTHH:MM
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+}
+
 // *******************************************************
 function saveAllTasks() {
   localStorage.setItem("myToDo", JSON.stringify(tasks));
@@ -157,7 +113,7 @@ function changeTaskStatus(id, value) {
     if (id === tasks[i].id) {
       tasks[i].completed = value;
       saveAllTasks();
-      renderAllTasks();
+      showTasks();
       return true;
     }
   }
@@ -166,8 +122,20 @@ function changeTaskStatus(id, value) {
 
 function createTaskHTML(task) {
   const li = document.createElement("li");
-  const date = new Date(task.date);
-  const [yearMonthDay, time] = task.date.split("T");
+  const dateString = new Date(task.date);
+  console.log(`createTaskHTML:date: ${dateString}`);
+
+  const year = dateString.getFullYear();
+  const month = String(dateString.getMonth() + 1).padStart(2, "0");
+  const day = String(dateString.getDate()).padStart(2, "0");
+  const hours = String(dateString.getHours()).padStart(2, "0");
+  const minutes = String(dateString.getMinutes()).padStart(2, "0");
+  const seconds = String(dateString.getSeconds()).padStart(2, "0");
+
+  const dateOnly = `${year}-${month}-${day}`;
+  const timeOnly = `${hours}:${minutes}`;
+
+  // const [yearMonthDay, time] = task.date.split("T");
 
   const input = document.createElement("input");
   input.type = "checkbox";
@@ -179,13 +147,28 @@ function createTaskHTML(task) {
 
   const pDate = document.createElement("p");
   pDate.className = "task-date";
-  pDate.textContent = task.date;
+  // pDate.textContent = task.date;
+  pDate.textContent = `${dateString.getDate()} ${
+    months[dateString.getMonth()]
+  } ${dateString.getFullYear()}   ${timeOnly}`;
+  // pDate.textContent = dateOnly + " " + timeOnly;
+  // pDate.textContent = `${dateString.toLocaleDateString()} ${dateString.toLocaleTimeString()}`;
 
   const pTask = document.createElement("p");
   pTask.className = "task-todo";
   if (task.completed) pTask.className += " deleted-text";
 
   pTask.textContent = task.title;
+
+  const edit = document.createElement("p");
+  //
+  edit.innerHTML =
+    '<span class="material-symbols-outlined taskEditBtn"> edit </span>';
+  edit.className = "taskEditBtnContainer";
+
+  edit.addEventListener("click", function () {
+    openTaskDialog(task.id);
+  });
 
   input.addEventListener("change", function () {
     changeTaskStatus(this.id, this.checked);
@@ -201,49 +184,190 @@ function createTaskHTML(task) {
 
   li.appendChild(input);
   li.appendChild(label);
-
-  //   li.innerHTML = `
-  //     <input type="checkbox" id="${task.id}" ${task.completed ? "checked" : ""} />
-  //     <label for="${task.id}">
-  //       <p class="task-date">${date.getDate()} ${
-  //     months[date.getMonth()]
-  //   } ${date.getFullYear()}, ${time}</p>
-  //       <p class="task-todo ${task.completed ? "deleted-text" : ""}">${
-  //     task.title
-  //   }</p>
-  //     </label>
-  //   `;
-
-  // Добавим обработчик события на список
-  // Он будет вызываться при клике на каждом элементе <li>
-  //   li.addEventListener("click", setChecked, false);
-
+  li.appendChild(edit);
   return li;
 }
 
-const addNewTaskBtn = document.querySelector("#addNewTaskForm");
 const listOfTasks = document.querySelector("#tasks");
+let filter = "active";
 
-function renderAllTasks() {
+function sortListByCompleted(list, value) {
+  return list
+    .filter((item) => {
+      return item.completed === value;
+    })
+    .sort((a, b) => {
+      return a.date - b.date;
+    });
+}
+
+function showTasks(sortByFilter = "") {
+  if (sortByFilter) filter = sortByFilter;
+
+  if (filter === "active") {
+    renderTasks(sortListByCompleted(tasks, false));
+  } else if (filter === "done") {
+    renderTasks(sortListByCompleted(tasks, true));
+  } else
+    renderTasks(
+      tasks.sort((a, b) => {
+        return a.date - b.date;
+      })
+    );
+}
+function renderTasks(tasks) {
   const listOfTasks = document.querySelector("#tasks");
   listOfTasks.innerHTML = "";
   for (let i = 0; i < tasks.length; i++) {
     listOfTasks.appendChild(createTaskHTML(tasks[i]));
   }
 }
+function getCurrentTaskById(id) {
+  const currentTask = {};
+  for (let i = 0; i < tasks.length; i++) {
+    if (tasks[i].id === id) {
+      return tasks[i];
+    }
+  }
+  return false;
+}
+const addNewTaskBlock = document.querySelector(".addNewTaskBlock");
+const addNewTaskFormDescriptionInput = document.querySelector(
+  "#addNewTaskFormDescriptionInput"
+);
 
-addNewTaskBtn.addEventListener("submit", (event) => {
+const addNewTaskFormDateInput = document.querySelector(
+  "#addNewTaskFormDateInput"
+);
+function openTaskDialog(taskId = "") {
+  addNewTaskBlock.classList.add("active");
+  addNewTaskForm.id = taskId;
+
+  addNewTaskFormDescriptionInput.value = "";
+  addNewTaskFormDateInput.value = "";
+
+  if (taskId !== "") {
+    const currentTask = getCurrentTaskById(taskId);
+    if (currentTask) {
+      addNewTaskFormDescriptionInput.value = currentTask.title;
+      addNewTaskFormDateInput.value = utcToInput(currentTask.date);
+    }
+  }
+}
+function closeTaskDialog() {
+  addNewTaskBlock.classList.remove("active");
+}
+
+function updateTask(task) {
+  for (let i = 0; i < tasks.length; i++) {
+    if (task.id === tasks[i].id) {
+      tasks[i].title = task.title;
+      tasks[i].date = task.date;
+      return true;
+    }
+  }
+  return false;
+}
+
+function deleteTask(id) {
+  const newTasksList = [];
+  for (let i = 0; i < tasks.length; i++) {
+    if (tasks[i].id === id) {
+      tasks.splice(i, 1);
+      console.log(`tasks.splice(i)`);
+      break;
+    }
+  }
+}
+const addNewTaskForm = document.querySelector(".addNewTaskForm");
+addNewTaskForm.addEventListener("submit", (event) => {
   event.preventDefault();
+
   const newTask = {
-    id: crypto.randomUUID(),
+    id: addNewTaskForm.id ? addNewTaskForm.id : crypto.randomUUID(),
     title: event.target.elements["task-description"].value,
-    date: event.target.elements["task-date"].value,
-    // date: new Date(event.target.elements["task-date"].value).getTime(),
+    // date: event.target.elements["task-date"].value,
+    date: new Date(event.target.elements["task-date"].value).getTime(),
     completed: false,
   };
+
   console.log(newTask);
-  tasks.push(newTask);
-  addNewTaskBtn.reset();
+  if (getCurrentTaskById(newTask.id)) {
+    updateTask(newTask);
+  } else tasks.push(newTask);
+
   saveAllTasks();
-  renderAllTasks();
+  closeTaskDialog();
+  showTasks();
+});
+
+// *******************************************************
+
+const addNewTaskBtnInMain = document.querySelector(".addNewTask");
+
+addNewTaskBtnInMain.addEventListener("click", () => {
+  openTaskDialog();
+});
+
+// *******************************************************
+const addNewTaskFormCancelBtn = document.querySelector(
+  "#addNewTaskFormCancelBtn"
+);
+
+addNewTaskFormCancelBtn.addEventListener("click", (event) => {
+  event.stopPropagation();
+  closeTaskDialog();
+});
+// *******************************************************
+const addNewTaskFormDeleteBtn = document.querySelector(
+  "#addNewTaskFormDeleteBtn"
+);
+
+addNewTaskFormDeleteBtn.addEventListener("click", (event) => {
+  event.stopPropagation();
+  deleteTask(addNewTaskForm.id);
+  saveAllTasks();
+  showTasks();
+  closeTaskDialog();
+});
+// *******************************************************
+const filterAllBtn = document.querySelector(".filter-all");
+const filterActiveBtn = document.querySelector(".filter-active");
+const filterDoneBtn = document.querySelector(".filter-done");
+
+const filterAllCheck = document.querySelector(".filter-all-check");
+const filterActiveCheck = document.querySelector(".filter-active-check");
+const filterDoneCheck = document.querySelector(".filter-done-check");
+
+filterAllBtn.addEventListener("click", () => {
+  filterAllBtn.classList.add("current");
+  filterActiveBtn.classList.remove("current");
+  filterDoneBtn.classList.remove("current");
+
+  filterAllCheck.classList.remove("hidden");
+  filterActiveCheck.classList.add("hidden");
+  filterDoneCheck.classList.add("hidden");
+  showTasks("all");
+});
+
+filterActiveBtn.addEventListener("click", () => {
+  filterAllBtn.classList.remove("current");
+  filterActiveBtn.classList.add("current");
+  filterDoneBtn.classList.remove("current");
+
+  filterAllCheck.classList.add("hidden");
+  filterActiveCheck.classList.remove("hidden");
+  filterDoneCheck.classList.add("hidden");
+  showTasks("active");
+});
+
+filterDoneBtn.addEventListener("click", () => {
+  filterAllBtn.classList.remove("current");
+  filterActiveBtn.classList.remove("current");
+  filterDoneBtn.classList.add("current");
+
+  filterAllCheck.classList.add("hidden");
+  filterActiveCheck.classList.add("hidden");
+  filterDoneCheck.classList.remove("hidden");
+  showTasks("done");
 });
