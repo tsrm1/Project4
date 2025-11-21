@@ -112,6 +112,8 @@ function changeTaskStatus(id, value) {
   for (let i = 0; i < tasks.length; i++) {
     if (id === tasks[i].id) {
       tasks[i].completed = value;
+      if (value) tasks[i].completedDate = Date.now();
+      else delete tasks[i].completedDate;
       saveAllTasks();
       showTasks();
       return true;
@@ -147,41 +149,38 @@ function getDate(timestamp) {
 
 function createTaskHTML(task) {
   const li = document.createElement("li");
+  const checkBtnContainer = document.createElement("p");
+  checkBtnContainer.className = "task-checkbox-container";
+
   const input = document.createElement("input");
   input.type = "checkbox";
   input.id = task.id;
   input.checked = task.completed;
+  input.className = "task-checkbox";
 
-  const label = document.createElement("label");
-  label.setAttribute("for", task.id);
+  const pDateBefore = document.createElement("p");
+  pDateBefore.className = "task-date-before";
+  pDateBefore.innerHTML = `<span class="material-symbols-outlined" style="font-size: 12px"> schedule </span> ${
+    getDate(task.date).dateTime
+  }`;
 
-  const pDate = document.createElement("p");
-  pDate.className = "task-date";
-  // pDate.textContent = task.date;
+  // pDateBefore.textContent = task.date;
 
-  // pDate.textContent = `${dateString.getDate()} ${
+  // pDateBefore.textContent = `${dateString.getDate()} ${
   //   months[dateString.getMonth()]
   // } ${dateString.getFullYear()}   ${timeOnly}`;
 
-  pDate.innerHTML =
-    '<span class="material-symbols-outlined" style="font-size: 12px"> schedule </span>' +
-    getDate(task.date).dateTime;
   // +     '<span class="material-symbols-outlined" style="font-size: 12px"> task_alt </span>';
   // pDate.textContent = `${dateString.toLocaleDateString()} ${dateString.toLocaleTimeString()}`;
 
   // <span class="material-symbols-outlined"> expand_circle_down </span>;
 
-  {
-    /* <style>
-.material-symbols-outlined {
-  font-variation-settings:
-  'FILL' 0,
-  'wght' 400,
-  'GRAD' 0,
-  'opsz' 24
-}
-</style> */
-  }
+  const pDateDone = document.createElement("p");
+  pDateDone.className = "task-date-done";
+  if (task.completedDate)
+    pDateDone.innerHTML = `<span class="material-symbols-outlined" style="font-size: 12px"> task_alt </span> ${
+      getDate(task.completedDate).dateTime
+    }`;
 
   const pTask = document.createElement("p");
   pTask.className = "task-todo";
@@ -190,9 +189,10 @@ function createTaskHTML(task) {
   pTask.textContent = task.title;
 
   const edit = document.createElement("p");
-  //
+
   edit.innerHTML =
-    '<span class="material-symbols-outlined taskEditBtn"> edit </span>';
+    '<span class="material-symbols-outlined taskEditBtn"> drag_indicator </span>';
+  // '<span class="material-symbols-outlined taskEditBtn"> edit </span>';
   edit.className = "taskEditBtnContainer";
 
   edit.addEventListener("click", function () {
@@ -208,11 +208,12 @@ function createTaskHTML(task) {
     // }
   });
 
-  label.appendChild(pDate);
-  label.appendChild(pTask);
+  checkBtnContainer.appendChild(input);
+  li.appendChild(checkBtnContainer);
 
-  li.appendChild(input);
-  li.appendChild(label);
+  li.appendChild(pDateBefore);
+  li.appendChild(pDateDone);
+  li.appendChild(pTask);
   li.appendChild(edit);
   return li;
 }
@@ -230,10 +231,31 @@ function sortListByCompleted(list, value) {
     });
 }
 
+const numAllElement = document.querySelector(".numAll");
+const numActiveElement = document.querySelector(".numActive");
+const numDoneElement = document.querySelector(".numDone");
+const searchClearBtn = document.querySelector(".search-btn");
+searchClearBtn.addEventListener("click", () => {
+  searchInput.value = "";
+  showTasks();
+});
+
 function showTasks(sortByFilter = "") {
-  let searchKey = searchInput.value;
+  numAllElement.textContent = ` (${tasks.length})`;
+
+  let numActive = tasks.reduce((total, item) => {
+    return item.completed ? total : total + 1;
+  }, 0);
+  numActiveElement.textContent = ` (${numActive})`;
+  numDoneElement.textContent = ` (${tasks.length - numActive})`;
+
+  let keyWord = searchInput.value;
+
+  if (keyWord) searchClearBtn.textContent = " close ";
+  else searchClearBtn.textContent = " search ";
+
   const searchedTasks = tasks.filter((item) => {
-    return item.title.toLowerCase().includes(searchKey.toLowerCase());
+    return item.title.toLowerCase().includes(keyWord.toLowerCase());
   });
   if (sortByFilter) filter = sortByFilter;
 
@@ -256,7 +278,6 @@ function renderTasks(tasks) {
   }
 }
 function getCurrentTaskById(id) {
-  const currentTask = {};
   for (let i = 0; i < tasks.length; i++) {
     if (tasks[i].id === id) {
       return tasks[i];
@@ -264,6 +285,7 @@ function getCurrentTaskById(id) {
   }
   return false;
 }
+
 const addNewTaskBlock = document.querySelector(".addNewTaskBlock");
 const addNewTaskFormDescriptionInput = document.querySelector(
   "#addNewTaskFormDescriptionInput"
@@ -272,6 +294,8 @@ const addNewTaskFormDescriptionInput = document.querySelector(
 const addNewTaskFormDateInput = document.querySelector(
   "#addNewTaskFormDateInput"
 );
+// addNewTaskFormDateInput.min = new Date().toISOString().split("T")[0];
+
 function openTaskDialog(taskId = "") {
   addNewTaskBlock.classList.add("active");
   addNewTaskForm.id = taskId;

@@ -39,7 +39,7 @@ body {
 #searchBar {
   display: flex;
   justify-content: space-between;
-  width: 100%;
+  width: 83%;
   height: 48px;
   margin-top: 8px;
   border-radius: 24px;
@@ -63,17 +63,19 @@ body {
   border: 2px solid gray;
 }
 .search-btn {
-  padding: 6px 0;
+  padding: 6px;
 }
 
 .search-btn:hover {
   cursor: pointer;
+  border: 1px solid gray;
+  border-radius: 18px;
 }
 #filters {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: 48px;
-  margin-top: 12px;
+  margin: 12px 0;
 }
 #filters > button {
   display: flex;
@@ -92,11 +94,7 @@ body {
 .filter-btn:hover {
   background-color: #e4d4ff;
 }
-#tasks > li:hover {
-  background-color: #e6e2e9;
-  border: 2px solid gray;
-  cursor: pointer;
-}
+
 .current {
   background-color: #e8def8;
 }
@@ -124,46 +122,77 @@ body {
   margin-top: 4px 0 80px;
   overflow-y: auto;
   /*Чтобы задать строго ограниченный по высоте блок, который можно прокручивать.*/
-  height: calc(100dvh - 260px);
+  height: calc(100dvh - 160px);
+  /* height: calc(100dvh - 260px); */
 }
 #tasks > li {
   list-style: none;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 48px 1fr 1fr 48px;
+  grid-template-rows: auto auto;
+  /* justify-content: space-between; */
   width: 100%;
-  height: 62px;
+  /* height: 48px; */
   background-color: #f7f2fa;
-  margin-top: 12px;
+  margin-bottom: 12px;
   border-radius: 16px;
 
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
   transition: 0.2s ease;
+
+  /* grid-template-areas: "task-checkbox task-date-before task-date-done task-edit",
+    "task-checkbox task-todo task-todo task-edit"; */
+}
+#tasks > li:hover {
+  background-color: #e6e2e9;
+  border: 2px solid gray;
+  cursor: pointer;
 }
 
-#tasks > li > input {
-  margin: 18px 16px;
+.task-checkbox-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  grid-row: 1 / 3; /* занимает обе строки */
+  grid-column: 1;
+}
+.task-checkbox {
+  /* margin: 18px 16px; */
   width: 24px;
   height: 24px;
   accent-color: #e8def8;
 }
+/* input[type="checkbox"] {
+  width: 24px;
+  height: 24px;
+  accent-color: #e8def8;
+} */
 
-#tasks > li > label {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 8px;
-}
-.task-date {
-  font-size: 16px;
+.task-date-before {
+  margin-top: 4px;
+  font-size: 14px;
   color: #a5a1a8;
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.task-date-done {
+  margin-top: 4px;
+  font-size: 14px;
+  color: #a5a1a8;
+  grid-column: 3;
+  grid-row: 1;
 }
 
 .task-todo {
   font-size: 18px;
   /* color: #a5a1a8; */
   color: #646365;
-  width: 270px;
+  /* width: 270px; */
   /* width: calc(100% - 126px); */
+  grid-column: 2 / 4; /* растягивается на две колонки */
+  grid-row: 2;
+  padding: 4px 0;
 }
 
 .deleted-text {
@@ -174,22 +203,28 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 62px;
+  /* width: 36px; */
+  width: 100%;
   border-radius: 15px;
-  cursor: pointer;
-  background: #efe5ff;
+  /* background: #efe5ff; */
   transition: 0.2s;
+
+  grid-row: 1 / 3; /* занимает обе строки */
+  grid-column: 4;
+
+  /* grid-area: "task-edit"; */
 }
 .taskEditBtnContainer:hover {
   background-color: #e4d4ff;
+  cursor: pointer;
 }
 .addNewTask {
   position: absolute;
-  padding: 16px;
-  bottom: 16px;
+  padding: 12px;
+  top: 69px;
   right: 16px;
-  width: 56px;
-  height: 56px;
+  width: 48px;
+  height: 48px;
   background-color: #ebdef7;
   border-radius: 16px;
 }
