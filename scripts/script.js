@@ -120,11 +120,8 @@ function changeTaskStatus(id, value) {
   return false;
 }
 
-function createTaskHTML(task) {
-  const li = document.createElement("li");
-  const dateString = new Date(task.date);
-  console.log(`createTaskHTML:date: ${dateString}`);
-
+function getDate(timestamp) {
+  const dateString = new Date(timestamp);
   const year = dateString.getFullYear();
   const month = String(dateString.getMonth() + 1).padStart(2, "0");
   const day = String(dateString.getDate()).padStart(2, "0");
@@ -132,11 +129,24 @@ function createTaskHTML(task) {
   const minutes = String(dateString.getMinutes()).padStart(2, "0");
   const seconds = String(dateString.getSeconds()).padStart(2, "0");
 
-  const dateOnly = `${year}-${month}-${day}`;
-  const timeOnly = `${hours}:${minutes}`;
-
   // const [yearMonthDay, time] = task.date.split("T");
 
+  const date = {
+    year: year,
+    month: month,
+    day: day,
+    hours: hours,
+    minutes: minutes,
+    seconds: seconds,
+    dateOnly: `${year}-${month}-${day}`,
+    timeOnly: `${hours}:${minutes}`,
+    dateTime: `${year}-${month}-${day} ${hours}:${minutes}`,
+  };
+  return date;
+}
+
+function createTaskHTML(task) {
+  const li = document.createElement("li");
   const input = document.createElement("input");
   input.type = "checkbox";
   input.id = task.id;
@@ -148,11 +158,30 @@ function createTaskHTML(task) {
   const pDate = document.createElement("p");
   pDate.className = "task-date";
   // pDate.textContent = task.date;
-  pDate.textContent = `${dateString.getDate()} ${
-    months[dateString.getMonth()]
-  } ${dateString.getFullYear()}   ${timeOnly}`;
-  // pDate.textContent = dateOnly + " " + timeOnly;
+
+  // pDate.textContent = `${dateString.getDate()} ${
+  //   months[dateString.getMonth()]
+  // } ${dateString.getFullYear()}   ${timeOnly}`;
+
+  pDate.innerHTML =
+    '<span class="material-symbols-outlined" style="font-size: 12px"> schedule </span>' +
+    getDate(task.date).dateTime;
+  // +     '<span class="material-symbols-outlined" style="font-size: 12px"> task_alt </span>';
   // pDate.textContent = `${dateString.toLocaleDateString()} ${dateString.toLocaleTimeString()}`;
+
+  // <span class="material-symbols-outlined"> expand_circle_down </span>;
+
+  {
+    /* <style>
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24
+}
+</style> */
+  }
 
   const pTask = document.createElement("p");
   pTask.className = "task-todo";
@@ -202,15 +231,19 @@ function sortListByCompleted(list, value) {
 }
 
 function showTasks(sortByFilter = "") {
+  let searchKey = searchInput.value;
+  const searchedTasks = tasks.filter((item) => {
+    return item.title.toLowerCase().includes(searchKey.toLowerCase());
+  });
   if (sortByFilter) filter = sortByFilter;
 
   if (filter === "active") {
-    renderTasks(sortListByCompleted(tasks, false));
+    renderTasks(sortListByCompleted(searchedTasks, false));
   } else if (filter === "done") {
-    renderTasks(sortListByCompleted(tasks, true));
+    renderTasks(sortListByCompleted(searchedTasks, true));
   } else
     renderTasks(
-      tasks.sort((a, b) => {
+      searchedTasks.sort((a, b) => {
         return a.date - b.date;
       })
     );
@@ -245,12 +278,14 @@ function openTaskDialog(taskId = "") {
 
   addNewTaskFormDescriptionInput.value = "";
   addNewTaskFormDateInput.value = "";
+  addNewTaskFormDeleteBtn.classList.add("hidden");
 
   if (taskId !== "") {
     const currentTask = getCurrentTaskById(taskId);
     if (currentTask) {
       addNewTaskFormDescriptionInput.value = currentTask.title;
       addNewTaskFormDateInput.value = utcToInput(currentTask.date);
+      addNewTaskFormDeleteBtn.classList.remove("hidden");
     }
   }
 }
@@ -370,4 +405,10 @@ filterDoneBtn.addEventListener("click", () => {
   filterActiveCheck.classList.add("hidden");
   filterDoneCheck.classList.remove("hidden");
   showTasks("done");
+});
+
+const searchInput = document.querySelector(".search-input");
+searchInput.addEventListener("input", () => {
+  // console.log(`searchInput: ${searchInput.value}`);
+  showTasks();
 });
