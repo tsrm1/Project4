@@ -66,25 +66,24 @@
             placeholder="Description"
             name="task-description"
             id="addNewTaskFormDescriptionInput"
+            required
           />
           <input
             type="datetime-local"
             placeholder="Date"
             name="task-date"
             id="addNewTaskFormDateInput"
+            required
           />
           <div class="remindMeBlock">
             <span class="remindMeBlock-text">Remind me </span>
-            <!-- <span class="remindMeBlock-checker material-symbols-outlined">
-            toggle_on
-          </span> -->
             <img src="/img/Switch.svg" alt="" />
           </div>
           <div class="devider"></div>
           <div class="btn-block">
-            <input type="button" value="Delete" id="addNewTaskFormDeleteBtn" />
-            <input type="button" value="Cancel" id="addNewTaskFormCancelBtn" />
             <input type="submit" value="Save" id="addNewTaskFormSubmitBtn" />
+            <input type="button" value="Cancel" id="addNewTaskFormCancelBtn" />
+            <input type="button" value="Delete" id="addNewTaskFormDeleteBtn" />
           </div>
         </form>
       </div>

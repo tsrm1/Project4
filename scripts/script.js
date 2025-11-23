@@ -149,8 +149,8 @@ function getDate(timestamp) {
 
 function createTaskHTML(task) {
   const li = document.createElement("li");
-  const checkBtnContainer = document.createElement("p");
-  checkBtnContainer.className = "task-checkbox-container";
+  // const checkBtnContainer = document.createElement("p");
+  // checkBtnContainer.className = "task-checkbox-container";
 
   const input = document.createElement("input");
   input.type = "checkbox";
@@ -208,8 +208,9 @@ function createTaskHTML(task) {
     // }
   });
 
-  checkBtnContainer.appendChild(input);
-  li.appendChild(checkBtnContainer);
+  // checkBtnContainer.appendChild(input);
+  // li.appendChild(checkBtnContainer);
+  li.appendChild(input);
 
   li.appendChild(pDateBefore);
   li.appendChild(pDateDone);
@@ -287,6 +288,10 @@ function getCurrentTaskById(id) {
 }
 
 const addNewTaskBlock = document.querySelector(".addNewTaskBlock");
+// addNewTaskBlock.addEventListener("click", () => {
+//   addNewTaskBlock.classList.remove("active");
+// });
+
 const addNewTaskFormDescriptionInput = document.querySelector(
   "#addNewTaskFormDescriptionInput"
 );
@@ -341,7 +346,6 @@ function deleteTask(id) {
 const addNewTaskForm = document.querySelector(".addNewTaskForm");
 addNewTaskForm.addEventListener("submit", (event) => {
   event.preventDefault();
-
   const newTask = {
     id: addNewTaskForm.id ? addNewTaskForm.id : crypto.randomUUID(),
     title: event.target.elements["task-description"].value,
@@ -350,7 +354,7 @@ addNewTaskForm.addEventListener("submit", (event) => {
     completed: false,
   };
 
-  console.log(newTask);
+  // console.log(newTask);
   if (getCurrentTaskById(newTask.id)) {
     updateTask(newTask);
   } else tasks.push(newTask);
