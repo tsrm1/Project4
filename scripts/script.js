@@ -286,11 +286,13 @@ function getCurrentTaskById(id) {
   }
   return false;
 }
-
+// **************************************************************************
 const addNewTaskBlock = document.querySelector(".addNewTaskBlock");
-// addNewTaskBlock.addEventListener("click", () => {
-//   addNewTaskBlock.classList.remove("active");
-// });
+addNewTaskBlock.addEventListener("click", () => {
+  // addNewTaskBlock.classList.remove("active");
+  closeTaskDialog();
+});
+// **************************************************************************
 
 const addNewTaskFormDescriptionInput = document.querySelector(
   "#addNewTaskFormDescriptionInput"
@@ -302,7 +304,9 @@ const addNewTaskFormDateInput = document.querySelector(
 // addNewTaskFormDateInput.min = new Date().toISOString().split("T")[0];
 
 function openTaskDialog(taskId = "") {
-  addNewTaskBlock.classList.add("active");
+  // addNewTaskBlock.classList.add("active");
+  addNewTaskBlock.style.display = "block";
+
   addNewTaskForm.id = taskId;
 
   addNewTaskFormDescriptionInput.value = "";
@@ -319,7 +323,8 @@ function openTaskDialog(taskId = "") {
   }
 }
 function closeTaskDialog() {
-  addNewTaskBlock.classList.remove("active");
+  // addNewTaskBlock.classList.remove("active");
+  addNewTaskBlock.style.display = "none";
 }
 
 function updateTask(task) {
@@ -344,8 +349,14 @@ function deleteTask(id) {
   }
 }
 const addNewTaskForm = document.querySelector(".addNewTaskForm");
+
+addNewTaskForm.addEventListener("click", (event) => {
+  event.stopPropagation();
+});
+
 addNewTaskForm.addEventListener("submit", (event) => {
   event.preventDefault();
+
   const newTask = {
     id: addNewTaskForm.id ? addNewTaskForm.id : crypto.randomUUID(),
     title: event.target.elements["task-description"].value,
